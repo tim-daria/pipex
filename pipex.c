@@ -6,13 +6,48 @@
 /*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:02:28 by dtimofee          #+#    #+#             */
-/*   Updated: 2025/03/18 16:03:17 by dtimofee         ###   ########.fr       */
+/*   Updated: 2025/03/24 16:19:06 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	main(int argc, char **argv)
+static int	error(void)
 {
-	
+	perror("Error");
+	return (0);
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	if (argc == 5)
+	{
+		int	fd_in;
+		int	fd_out;
+		int	pipe_fd[2];
+		int	fd;
+		pid_t	child1;
+		pid_t	child2;
+
+		fd_in = open(argv[1], O_RDONLY);
+		if (fd == -1)
+			handle_error();
+
+			// after this line call dup function?
+		if (pipe(pipe_fd[2] == -1))
+			return (error());
+		child1 = fork();
+		if (child1 == -1)
+			return (error()); //should I really end a programm?
+		else if (child1 == 0)
+		{
+
+		}
+		else if (child1 > 0)
+		{
+
+		}
+	}
+	else
+		ft_printf("Error! Wrong number of arguments\n");
 }
