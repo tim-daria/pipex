@@ -6,7 +6,7 @@
 /*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:02:28 by dtimofee          #+#    #+#             */
-/*   Updated: 2025/03/24 16:19:06 by dtimofee         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:06:16 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,17 @@
 static int	error(void)
 {
 	perror("Error");
-	return (0);
+	//return (0);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	if (argc == 5)
+	if (argc != 5)
 	{
+		ft_printf("Error! Wrong number of arguments\n");
+		return (0);
+	}
+
 		int	fd_in;
 		int	fd_out;
 		int	pipe_fd[2];
@@ -47,7 +51,4 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 
 		}
-	}
-	else
-		ft_printf("Error! Wrong number of arguments\n");
 }
