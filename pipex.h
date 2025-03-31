@@ -6,16 +6,26 @@
 /*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:03:29 by dtimofee          #+#    #+#             */
-/*   Updated: 2025/03/24 12:20:39 by dtimofee         ###   ########.fr       */
+/*   Updated: 2025/03/31 17:02:46 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# ifndef PIPEX_H
+#ifndef PIPEX_H
 # define PIPEX_H
 
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <errno.h>
 
+typedef struct s_data {
+	int		fd_in;
+	int		fd_out;
+	int		pipes_count;
+	pid_t	child1;
+	pid_t	child2;
+	int		pipe_fd[2];
+	char	**path_dir;
+}	t_data;
 
 # endif

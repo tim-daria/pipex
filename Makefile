@@ -6,7 +6,7 @@
 #    By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/04 12:41:15 by dtimofee          #+#    #+#              #
-#    Updated: 2025/03/18 16:07:32 by dtimofee         ###   ########.fr        #
+#    Updated: 2025/03/31 17:07:34 by dtimofee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
-SRCS = pipex.c
+SRCS = pipex.c input_check.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT_FOLDER = ./Libft
