@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dtimofee <dtimofee@student.42berlin.de>    #+#  +:+       +#+        */
+/*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-04-01 13:15:00 by dtimofee          #+#    #+#             */
-/*   Updated: 2025-04-01 13:15:00 by dtimofee         ###   ########.fr       */
+/*   Created: 2025/04/01 13:15:00 by dtimofee          #+#    #+#             */
+/*   Updated: 2025/04/02 17:44:10 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	handle_error(t_data *data)
 	if (data->fd_in > 0)
 		close(data->fd_in);
 	// i = 0;
-	// if (data->path_file[i] != NULL)
-	// 	free_array(data->path_file);
+	if (data->path_file[i] != NULL)
+		free_array(data->path_file);
 }
 
 void	init_data(t_data *data)
