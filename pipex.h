@@ -6,7 +6,7 @@
 /*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:03:29 by dtimofee          #+#    #+#             */
-/*   Updated: 2025/03/31 17:02:46 by dtimofee         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:19:39 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ typedef struct s_data
 {
 	int		fd_in;
 	int		fd_out;
-	int		pipes_count;
+	int		cmd_count;
 	pid_t	child1;
 	pid_t	child2;
 	int		pipe_fd[2];

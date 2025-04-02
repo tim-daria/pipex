@@ -6,18 +6,24 @@
 /*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:02:28 by dtimofee          #+#    #+#             */
-/*   Updated: 2025/03/31 17:03:07 by dtimofee         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:20:14 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+static void	create_pipe(t_data *data)
+{
+	if (pipe(data->pipe_fd) == -1)
+	{
+		perror("Pipe failed");
+		exit(1);
+	}
+}
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
-	// int	pipe_fd[2];
-	// pid_t	child1;
-	// pid_t	child2;
+	int		i;
 
 	if (argc < 5)
 	{
@@ -25,15 +31,13 @@ int	main(int argc, char *argv[], char *envp[])
 		return (0);
 	}
 	init_data(&data);
-	data.pipes_count = argc - 4;
-	if (check_input(&data, argc, argv, envp) == -1)
+	data.cmd_count = argc - 3;
+	if (set_path(&data, envp) == -1) //do I need handle_error here?
 		return (0);
+	i = 0;
+	while (i < data.cmd_count)
+	{
+		create_pipe(&data);
+	}
 
-	// fd_in = open(argv[1], O_RDONLY);
-	// if (fd_in == -1)
-	// 	handle_error();
-
-		// if (pipe(pipe_fd[2] == -1))
-		// 	return (error());
-		// child1 = fork();
 }

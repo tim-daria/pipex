@@ -6,7 +6,7 @@
 /*   By: dtimofee <dtimofee@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:56:27 by dtimofee          #+#    #+#             */
-/*   Updated: 2025/03/31 17:07:07 by dtimofee         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:21:25 by dtimofee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,17 @@ static int	check_inputfile(t_data *data, char *file_in)
 	return (0);
 }
 
-int	check_input(t_data *data, int argc, char *argv[], char *envp[])
-{
-	if (set_path(data, envp) == -1)
-	{
-		handle_error(data);
-		return (-1);
-	}
-	if (check_inputfile(data, argv[1]) != -1)
-	{
-		if (check_command(data, argv[2], envp) == -1)
-			return (-1);
-	}
-	//check all other commands
-}
+// int	check_input(t_data *data, int argc, char *argv[], char *envp[])
+// {
+// 	if (set_path(data, envp) == -1)
+// 	{
+// 		handle_error(data);// check it
+// 		return (-1);
+// 	}
+// 	if (check_inputfile(data, argv[1]) != -1)
+// 	{
+// 		if (check_command(data, argv[2], envp) == -1)
+// 			return (-1);
+// 	}
+// 	//check all other commands
+// }
