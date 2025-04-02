@@ -13,19 +13,24 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <errno.h>
+# include <unistd.h>
+# include <sys/types.h>
+# include <fcntl.h>
+# include <errno.h>
 
-typedef struct s_data {
+typedef struct s_data
+{
 	int		fd_in;
 	int		fd_out;
 	int		pipes_count;
 	pid_t	child1;
 	pid_t	child2;
 	int		pipe_fd[2];
-	char	**path_dir;
+	char	**path_file;
 }	t_data;
 
-# endif
+void	init_data(t_data *data);
+void	handle_error(t_data *data);
+void	free_array(char **str_array);
+
+#endif

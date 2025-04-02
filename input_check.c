@@ -12,30 +12,6 @@
 
 #include "pipex.h"
 
-static char	*find_path(t_data *data, char *cmd, char *envp[])
-{
-	char	*full_path;
-	// char	**path_dir;
-	int		i;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			break;
-		i++;
-	}
-	full_path = ft_strtrim(envp[i], "PATH=");
-	if (full_path == NULL || ft_strlen(full_path) == 0)
-		{
-			ft_printf("PATH is not set or empty\n");
-			return (NULL);
-		} // how to exit if full_path not found?
-	data->path_dir = ft_split(full_path, ':');
-	if (data->path_dir == NULL)
-		ft_printf("Error with finding PATH\n");
-	free(full_path);
-}
 static char	*extract_command(char *command)
 {
 	char	*cmd;
@@ -49,21 +25,22 @@ static char	*extract_command(char *command)
 	while (len-- > 0)
 	{
 		if (command[i] == ' ' || command[i] == '\0')
-			break;
+			break ;
 		i++;
 	}
 	cmd = ft_substr(command, 0, i + 1);
 	return (cmd);
 }
+
 static int	check_command(t_data *data, char *command, char *envp[])
 {
-	//char	*path;
 	char	*cmd;
+	char	*pathname;
 
 	cmd = extract_command(command);
-	find_path(data, cmd, envp);
-	// if (path == NULL)
-	//check if command executable with access()
+	if (find_path(data, cmd) == -1)
+		return (-1);
+	free(cmd);
 	return (0);
 }
 
@@ -80,6 +57,15 @@ static int	check_inputfile(t_data *data, char *file_in)
 
 int	check_input(t_data *data, int argc, char *argv[], char *envp[])
 {
+	if (set_path(data, envp) == -1)
+	{
+		handle_error(data);
+		return (-1);
+	}
 	if (check_inputfile(data, argv[1]) != -1)
-		check_command(data, argv[2], envp);
+	{
+		if (check_command(data, argv[2], envp) == -1)
+			return (-1);
+	}
+	//check all other commands
 }

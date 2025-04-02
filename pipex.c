@@ -12,27 +12,6 @@
 
 #include "pipex.h"
 
-static void	handle_error(t_data *data)
-{
-	if (errno == ENOENT || errno == EACCES)
-		perror("Error with opening file.");
-	else if (condition)
-	{
-		/* code */
-	}
-	if (data->fd_in > 0)
-		close(data->fd_in);
-}
-void	init_data(t_data *data)
-{
-	data->fd_in = -1;
-	data->fd_out = -1;
-	data->child1 = -1;
-	data->child2 = -1;
-	data->pipe_fd[2] = -1;
-	data->path_dir = NULL;
-}
-
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
@@ -48,6 +27,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data);
 	data.pipes_count = argc - 4;
 	if (check_input(&data, argc, argv, envp) == -1)
+		return (0);
 
 	// fd_in = open(argv[1], O_RDONLY);
 	// if (fd_in == -1)
