@@ -37,6 +37,10 @@ static int	add_slash_topath(t_data *data, char **path_file)
 
 	i = 0;
 	while (path_file[i])
+		i++;
+	data->path_file = malloc(i + 1 * sizeof(char *));
+	i = 0;
+	while (path_file[i])
 	{
 		data->path_file[i] = ft_strjoin(path_file[i], "/");
 		if (data->path_file == NULL)
@@ -75,30 +79,4 @@ int	set_path(t_data *data, char *envp[])
 		return (-1);
 	}
 	return (0);
-}
-
-int	find_path(t_data *data, char *cmd)
-{
-	int		i;
-	char	*temp;
-
-	i = 0;
-	while (data->path_file[i])
-	{
-		temp = ft_strjoin(data->path_file[i], cmd);
-		if (temp == NULL)
-		{
-			ft_printf("Command not found\n");
-			return (-1);
-		}
-		if (access(temp, X_OK) == 0)
-		{
-			free(temp);
-			return (0);
-		}
-		free(temp);
-		i++;
-	}
-	ft_printf("Command not found\n");
-	return (-1);
 }

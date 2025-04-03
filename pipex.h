@@ -15,22 +15,38 @@
 
 # include <unistd.h>
 # include <sys/types.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include "Libft/libft.h"
+
+typedef struct s_cmd
+{
+	int		cmd_count;
+	char	*cmd_path;
+	char	**cmd_argv;
+}	t_cmd;
 
 typedef struct s_data
 {
 	int		fd_in;
 	int		fd_out;
-	int		cmd_count;
-	pid_t	child1;
-	pid_t	child2;
-	int		pipe_fd[2];
+	t_cmd	command;
+	pid_t	*child_pid;
+	int		(*pipe_fd)[2];
 	char	**path_file;
 }	t_data;
 
-void	init_data(t_data *data);
+int		set_path(t_data *data, char *envp[]);
+int		check_command(t_data *data, char *command);
+int		open_file(t_data *data, char *file, int i);
+void	child_process(t_data *data, int i, char *argv[], char *envp[]);
+void	parent_process(t_data *data);
+void	init_data(t_data *data, int argc);
 void	handle_error(t_data *data);
 void	free_array(char **str_array);
+void	finish_program(t_data *data);
 
 #endif

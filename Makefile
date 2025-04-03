@@ -13,10 +13,10 @@
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 NAME = pipex
-SRCS = pipex.c input_check.c set_path.c utils.c
+SRCS = check.c set_path.c utils.c pipex.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT_FOLDER = ./Libft
