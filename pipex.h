@@ -35,7 +35,7 @@ typedef struct s_data
 	int		fd_out;
 	t_cmd	command;
 	pid_t	*child_pid;
-	int		(*pipe_fd)[2];
+	int		*pipe_fd;
 	char	**path_file;
 }	t_data;
 
