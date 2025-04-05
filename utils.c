@@ -14,10 +14,12 @@
 
 void	finish_program(t_data *data)
 {
+	printf("I am in finish program\n");
+	fflush(0);
 	free(data->pipe_fd);
 	free(data->child_pid);
 	free(data->command.cmd_path);
-	free_array(data->command.cmd_argv);
+	// free_array(data->command.cmd_argv);
 	free_array(data->path_file);
 }
 

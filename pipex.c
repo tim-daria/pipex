@@ -24,7 +24,7 @@ void	child_process(t_data *data, int i, char *argv[], char *envp[])
 		printf("aaa\n");
 		if (open_file(data, argv[1], i) == -1)
 			exit(1);
-		//close(data->pipe_fd[i][0]);
+		//close(data->pipe_fd[2 * i]);
 		printf("bbb\n");
 		if (dup2(data->fd_in, STDIN_FILENO) == -1)
 		{
@@ -49,7 +49,7 @@ void	child_process(t_data *data, int i, char *argv[], char *envp[])
 	{
 		if (open_file(data, argv[data->command.cmd_count + 2], i) == -1)
 			exit(1);
-		//close(data->pipe_fd[i][1]);
+		//close(data->pipe_fd[2 * i + 1]);
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 		close(data->pipe_fd[2 * i - 2]);
 		dup2(data->fd_out, STDOUT_FILENO);
@@ -57,10 +57,10 @@ void	child_process(t_data *data, int i, char *argv[], char *envp[])
 	}
 	else
 	{
-		//close(data->pipe_fd[i][1]);
+		//close(data->pipe_fd[2 * i - 1]);
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 		close(data->pipe_fd[2 * i - 2]);
-		//close(data->pipe_fd[i][0]);
+		//close(data->pipe_fd[2 * i]);
 		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
 		close(data->pipe_fd[2 * i + 1]);
 	}
@@ -90,7 +90,11 @@ void	parent_process(t_data *data)
 	while (i < data->command.cmd_count)
 	{
 		printf("%d - child_pid\n", data->child_pid[i]);
-		waitpid(data->child_pid[i], NULL, 0);
+		if (waitpid(data->child_pid[i], NULL, 0) == -1)
+		{
+			perror("Error waiting for child process");
+			exit(1);
+		}
 		i++;
 	}
 	i = 0;
@@ -123,38 +127,26 @@ int	main(int argc, char *argv[], char *envp[])
 		return (0);
 	}
 	init_data(&data, argc);
-	printf("a\n");
-	fflush(0);
 	if (set_path(&data, envp) == -1)
 		return (0);
-	printf("Am i here?\n");
-	fflush(0);
 	i = 0;
 	while (i < data.command.cmd_count)
 	{
 		if (i < data.command.cmd_count - 1)
 			create_pipe(&data, i);
-		printf("%d\n", data.command.cmd_count);
-		printf("%s\n", data.command.cmd_path);
-		fflush(0);
-		data.child_pid[2 * i] = fork();
-		printf("%d\n", data.child_pid[i]);
-		fflush(0);
-		if (data.child_pid[2 * i] == -1)
+		data.child_pid[i] = fork();
+		if (data.child_pid[i] == -1)
 		{
 			perror("Fork failed");
 			handle_error(&data);
 			exit(1);
 		}
-		else if (data.child_pid[2 * i] == 0)
+		else if (data.child_pid[i] == 0)
 		{
-			printf("Inside child\n");
-			fflush(0);
 			child_process(&data, i, argv, envp);
-			exit(0);
 		}
-		free(data.command.cmd_path);
-		free_array(data.command.cmd_argv);
+		// free(data.command.cmd_path);
+		// free_array(data.command.cmd_argv);
 		i++;
 	}
 	parent_process(&data);

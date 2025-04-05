@@ -46,7 +46,7 @@ static int	find_path(t_data *data, char *cmd)
 			fflush(0);
 			return (0);
 		}
-		free(temp);
+		// free(temp);
 		i++;
 	}
 	ft_printf("Command not found\n");
@@ -80,7 +80,7 @@ int	open_file(t_data *data, char *file, int i)
 	}
 	else if (i == data->command.cmd_count - 1)
 	{
-		data->fd_out = open(file, O_CREAT | O_WRONLY);
+		data->fd_out = open(file, O_WRONLY | O_CREAT, 511);
 		if (data->fd_out == -1)
 		{
 			perror("Error with opening file.");
