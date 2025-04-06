@@ -23,7 +23,6 @@ static char	*extract_command(t_data *data, char *command)
 	return (data->command.cmd_argv[0]);
 }
 
-
 static int	find_path(t_data *data, char *cmd)
 {
 	int		i;
@@ -69,7 +68,7 @@ int	open_file(t_data *data, char *file, int i)
 		data->fd_in = open(file, O_RDONLY);
 		if (data->fd_in == -1)
 		{
-			perror("Error with opening file.");
+			perror("Error with opening file");
 			return (-1);
 		}
 	}
@@ -78,7 +77,7 @@ int	open_file(t_data *data, char *file, int i)
 		data->fd_out = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 		if (data->fd_out == -1)
 		{
-			perror("Error with opening file.");
+			perror("Error with opening file");
 			return (-1);
 		}
 	}

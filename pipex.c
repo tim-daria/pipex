@@ -65,14 +65,13 @@ static void	child_process(t_data *data, int i, char *argv[], char *envp[])
 	}
 }
 
-static void	create_pipe(t_data *data, int i)
+static void	parent_process(t_data *data, int i)
 {
-	if (pipe(&data->pipe_fd[2 * i]) == -1)
-	{
-		perror("Pipe failed");
-		free_data(data);
-		exit(1);
-	}
+	waitpid(data->child_pid[i], NULL, 0);
+	if (i < data->command.cmd_count - 1)
+		close(data->pipe_fd[2 * i + 1]);
+	if (i > 0 && i < data->command.cmd_count)
+		close(data->pipe_fd[2 * i - 2]);
 }
 
 static void	interprocess_communication(t_data *data, char *argv[], char *envp[])
@@ -94,15 +93,7 @@ static void	interprocess_communication(t_data *data, char *argv[], char *envp[])
 		else if (data->child_pid[i] == 0)
 			child_process(data, i, argv, envp);
 		else
-		{
-			waitpid(data->child_pid[i], NULL, 0);
-			if (i < data->command.cmd_count - 1)
-				close(data->pipe_fd[2 * i + 1]);
-			if (i > 0 && i < data->command.cmd_count)
-				close(data->pipe_fd[2 * i - 2]);
-		}
-		// free(data.command.cmd_path);
-		// free_array(data.command.cmd_argv);
+			parent_process(data, i);
 		i++;
 	}
 }
@@ -123,6 +114,5 @@ int	main(int argc, char *argv[], char *envp[])
 		return (0);
 	}
 	interprocess_communication(&data, argv, envp);
-	// parent_process(&data);
 	free_data(&data);
 }

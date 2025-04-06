@@ -44,6 +44,7 @@ int		check_command(t_data *data, char *command);
 int		open_file(t_data *data, char *file, int i);
 void	init_data(t_data *data, int argc);
 void	close_fds(t_data *data, int i);
+void	create_pipe(t_data *data, int i);
 void	free_array(char **str_array);
 void	free_data(t_data *data);
 

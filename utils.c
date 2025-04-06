@@ -20,7 +20,6 @@ void	free_data(t_data *data)
 		free(data->child_pid);
 	if (data->command.cmd_path)
 		free(data->command.cmd_path);
-	// free_array(data->command.cmd_argv);
 	if (data->path_file[0])
 		free_array(data->path_file);
 }
@@ -47,6 +46,16 @@ void	close_fds(t_data *data, int i)
 		close(data->pipe_fd[2 * i - 1]);
 		close(data->pipe_fd[2 * i]);
 		close(data->pipe_fd[2 * i + 1]);
+	}
+}
+
+void	create_pipe(t_data *data, int i)
+{
+	if (pipe(&data->pipe_fd[2 * i]) == -1)
+	{
+		perror("Pipe failed");
+		free_data(data);
+		exit(1);
 	}
 }
 
