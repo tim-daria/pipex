@@ -17,7 +17,6 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <unistd.h>
-# include "get_next_line.h"
 # include "ft_printf.h"
 
 typedef struct s_list

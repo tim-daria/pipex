@@ -14,11 +14,15 @@
 
 void	finish_program(t_data *data)
 {
-	free(data->pipe_fd);
-	free(data->child_pid);
-	free(data->command.cmd_path);
+	if (data->pipe_fd)
+		free(data->pipe_fd);
+	if (data->child_pid)
+		free(data->child_pid);
+	if (data->command.cmd_path)
+		free(data->command.cmd_path);
 	// free_array(data->command.cmd_argv);
-	free_array(data->path_file);
+	if (data->path_file[0])
+		free_array(data->path_file);
 }
 
 void	free_array(char **str_array)
@@ -59,6 +63,8 @@ void	init_data(t_data *data, int argc)
 	if (data->pipe_fd == NULL)
 	{
 		ft_printf("Malloc failed\n");
+		if (data->child_pid)
+			free(data->child_pid);
 		exit(1);
 	}
 }

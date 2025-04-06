@@ -13,7 +13,7 @@
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
 SRCS = check.c set_path.c utils.c pipex.c

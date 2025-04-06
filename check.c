@@ -35,7 +35,8 @@ static int	find_path(t_data *data, char *cmd)
 		temp = ft_strjoin(data->path_file[i], cmd);
 		if (temp == NULL)
 		{
-			ft_printf("Command not found\n");
+			ft_printf("%s: command not found\n", cmd);
+			free_array(data->command.cmd_argv);
 			return (-1);
 		}
 		if (access(temp, X_OK) == 0)
@@ -43,10 +44,11 @@ static int	find_path(t_data *data, char *cmd)
 			data->command.cmd_path = temp;
 			return (0);
 		}
-		// free(temp);
+		free(temp);
 		i++;
 	}
-	ft_printf("Command not found\n");
+	ft_printf("%s: command not found\n", cmd);
+	free_array(data->command.cmd_argv);
 	return (-1);
 }
 
