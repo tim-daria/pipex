@@ -41,9 +41,6 @@ static int	find_path(t_data *data, char *cmd)
 		if (access(temp, X_OK) == 0)
 		{
 			data->command.cmd_path = temp;
-			// free(temp);
-			printf("%s - data_cmd_path\n", data->command.cmd_path);
-			fflush(0);
 			return (0);
 		}
 		// free(temp);
@@ -57,11 +54,7 @@ int	check_command(t_data *data, char *command)
 {
 	char	*cmd;
 
-	printf("I am in check_command\n");
-	fflush(0);
 	cmd = extract_command(data, command);
-	printf("%s\n", cmd);
-	fflush(0);
 	if (cmd == NULL || find_path(data, cmd) == -1)
 		return (-1);
 	return (0);
@@ -80,7 +73,7 @@ int	open_file(t_data *data, char *file, int i)
 	}
 	else if (i == data->command.cmd_count - 1)
 	{
-		data->fd_out = open(file, O_WRONLY | O_CREAT, 511);
+		data->fd_out = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 		if (data->fd_out == -1)
 		{
 			perror("Error with opening file.");
