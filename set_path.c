@@ -38,7 +38,7 @@ static int	add_slash_topath(t_data *data, char **path_file)
 	i = 0;
 	while (path_file[i])
 		i++;
-	data->path_file = malloc(i + 1 * sizeof(char *));
+	data->path_file = malloc((i + 1) * sizeof(char *));
 	i = 0;
 	while (path_file[i])
 	{

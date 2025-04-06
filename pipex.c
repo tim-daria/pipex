@@ -23,6 +23,8 @@ static void	first_and_last_child(t_data *data, int i, char *argv[])
 		dup2(data->fd_in, STDIN_FILENO);
 		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
 		close(data->pipe_fd[2 * i]);
+		close(data->fd_in);
+		close(data->pipe_fd[2 * i + 1]);
 	}
 	else if (i == data->command.cmd_count - 1)
 	{
@@ -32,7 +34,9 @@ static void	first_and_last_child(t_data *data, int i, char *argv[])
 			exit(1);
 		dup2(data->fd_out, STDOUT_FILENO);
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
+		close(data->pipe_fd[2 * i - 2]);
 		close(data->pipe_fd[2 * i - 1]);
+		close(data->fd_out);
 	}
 }
 
@@ -48,8 +52,10 @@ static void	child_process(t_data *data, int i, char *argv[], char *envp[])
 			exit(1);
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
+		close(data->pipe_fd[2 * i - 2]);
 		close(data->pipe_fd[2 * i - 1]);
 		close(data->pipe_fd[2 * i]);
+		close(data->pipe_fd[2 * i + 1]);
 	}
 	signal = execve(data->command.cmd_path, data->command.cmd_argv, envp);
 	if (signal == -1)
@@ -90,7 +96,10 @@ static void	interprocess_communication(t_data *data, char *argv[], char *envp[])
 		else
 		{
 			waitpid(data->child_pid[i], NULL, 0);
-			close(data->pipe_fd[2 * i + 1]);
+			if (i < data->command.cmd_count - 1)
+				close(data->pipe_fd[2 * i + 1]);
+			if (i > 0 && i < data->command.cmd_count)
+				close(data->pipe_fd[2 * i - 2]);
 		}
 		// free(data.command.cmd_path);
 		// free_array(data.command.cmd_argv);
