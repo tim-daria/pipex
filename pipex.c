@@ -16,27 +16,27 @@ static void	first_and_last_child(t_data *data, int i, char *argv[])
 {
 	if (i == 0)
 	{
-		if (open_file(data, argv[1], i) == -1)
+		if (open_file(data, argv[1], i) == -1
+			|| check_command(data, argv[i + 2]) == -1)
+		{
+			close_fds(data, i);
 			exit(1);
-		if (check_command(data, argv[i + 2]) == -1)
-			exit(1);
+		}
 		dup2(data->fd_in, STDIN_FILENO);
 		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
-		close(data->pipe_fd[2 * i]);
-		close(data->fd_in);
-		close(data->pipe_fd[2 * i + 1]);
+		close_fds(data, i);
 	}
 	else if (i == data->command.cmd_count - 1)
 	{
-		if (open_file(data, argv[data->command.cmd_count + 2], i) == -1)
+		if (open_file(data, argv[data->command.cmd_count + 2], i) == -1
+			|| check_command(data, argv[i + 2]) == -1)
+		{
+			close_fds(data, i);
 			exit(1);
-		if (check_command(data, argv[i + 2]) == -1)
-			exit(1);
+		}
 		dup2(data->fd_out, STDOUT_FILENO);
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
-		close(data->pipe_fd[2 * i - 2]);
-		close(data->pipe_fd[2 * i - 1]);
-		close(data->fd_out);
+		close_fds(data, i);
 	}
 }
 
@@ -49,13 +49,13 @@ static void	child_process(t_data *data, int i, char *argv[], char *envp[])
 	else
 	{
 		if (check_command(data, argv[i + 2]) == -1)
+		{
+			close_fds(data, i);
 			exit(1);
+		}
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
-		close(data->pipe_fd[2 * i - 2]);
-		close(data->pipe_fd[2 * i - 1]);
-		close(data->pipe_fd[2 * i]);
-		close(data->pipe_fd[2 * i + 1]);
+		close_fds(data, i);
 	}
 	signal = execve(data->command.cmd_path, data->command.cmd_argv, envp);
 	if (signal == -1)
@@ -70,7 +70,7 @@ static void	create_pipe(t_data *data, int i)
 	if (pipe(&data->pipe_fd[2 * i]) == -1)
 	{
 		perror("Pipe failed");
-		finish_program(data);
+		free_data(data);
 		exit(1);
 	}
 }
@@ -88,7 +88,7 @@ static void	interprocess_communication(t_data *data, char *argv[], char *envp[])
 		if (data->child_pid[i] == -1)
 		{
 			perror("Fork failed");
-			finish_program(data);
+			free_data(data);
 			exit(1);
 		}
 		else if (data->child_pid[i] == 0)
@@ -119,10 +119,10 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data, argc);
 	if (set_path(&data, envp) == -1)
 	{
-		finish_program(&data);
+		free_data(&data);
 		return (0);
 	}
 	interprocess_communication(&data, argv, envp);
 	// parent_process(&data);
-	finish_program(&data);
+	free_data(&data);
 }

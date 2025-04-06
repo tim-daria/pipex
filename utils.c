@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-void	finish_program(t_data *data)
+void	free_data(t_data *data)
 {
 	if (data->pipe_fd)
 		free(data->pipe_fd);
@@ -25,6 +25,31 @@ void	finish_program(t_data *data)
 		free_array(data->path_file);
 }
 
+void	close_fds(t_data *data, int i)
+{
+	if (i == 0)
+	{
+		close(data->pipe_fd[2 * i]);
+		if (data->fd_in != -1)
+			close(data->fd_in);
+		close(data->pipe_fd[2 * i + 1]);
+	}
+	else if (i == data->command.cmd_count - 1)
+	{
+		close(data->pipe_fd[2 * i - 2]);
+		close(data->pipe_fd[2 * i - 1]);
+		if (data->fd_out != -1)
+			close(data->fd_out);
+	}
+	else
+	{
+		close(data->pipe_fd[2 * i - 2]);
+		close(data->pipe_fd[2 * i - 1]);
+		close(data->pipe_fd[2 * i]);
+		close(data->pipe_fd[2 * i + 1]);
+	}
+}
+
 void	free_array(char **str_array)
 {
 	int	i;
@@ -33,16 +58,6 @@ void	free_array(char **str_array)
 	while (str_array[i])
 		free (str_array[i++]);
 	free (str_array);
-}
-
-void	handle_error(t_data *data)
-{
-	if (errno == ENOENT || errno == EACCES)
-		perror("Error with opening file.");
-	if (data->fd_in > 0)
-		close(data->fd_in);
-	if (data->path_file[0] != NULL)
-		free_array(data->path_file);
 }
 
 void	init_data(t_data *data, int argc)

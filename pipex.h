@@ -43,8 +43,8 @@ int		set_path(t_data *data, char *envp[]);
 int		check_command(t_data *data, char *command);
 int		open_file(t_data *data, char *file, int i);
 void	init_data(t_data *data, int argc);
-void	handle_error(t_data *data);
+void	close_fds(t_data *data, int i);
 void	free_array(char **str_array);
-void	finish_program(t_data *data);
+void	free_data(t_data *data);
 
 #endif
