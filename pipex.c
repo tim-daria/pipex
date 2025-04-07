@@ -85,13 +85,8 @@ static void	parent_process(t_data *data, int i)
 	if (WEXITSTATUS(status) != 0 && i == data->command.cmd_count - 1)
 	{
 		exit_code = WEXITSTATUS(status);
-		free_data(data);
-		exit(exit_code);
+		cleanup_and_exit(data, i, exit_code);
 	}
-	if (i < data->command.cmd_count - 1)
-		close(data->pipe_fd[2 * i + 1]);
-	if (i > 0 && i < data->command.cmd_count)
-		close(data->pipe_fd[2 * i - 2]);
 }
 
 static void	interprocess_communication(t_data *data, char *argv[], char *envp[])
