@@ -23,10 +23,7 @@ static void	first_child(t_data *data, int i, char *argv[])
 {
 	if (open_file(data, argv[1], i) == -1
 		|| check_command(data, argv[i + 2]) != 0)
-	{
-		close_fds(data, i);
-		exit(1);
-	}
+		cleanup_and_exit(data, i, 1);
 	dup2(data->fd_in, STDIN_FILENO);
 	dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
 	close_fds(data, i);
@@ -37,16 +34,10 @@ static void	last_child(t_data *data, int i, char *argv[])
 	int	error;
 
 	if (open_file(data, argv[data->command.cmd_count + 2], i) == -1)
-	{
-		close_fds(data, i);
-		exit(1);
-	}
+		cleanup_and_exit(data, i, 1);
 	error = check_command(data, argv[i + 2]);
 	if (error != 0)
-	{
-		close_fds(data, i);
-		exit(error);
-	}
+		cleanup_and_exit(data, i, error);
 	dup2(data->fd_out, STDOUT_FILENO);
 	dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 	close_fds(data, i);
