@@ -82,10 +82,15 @@ static void	parent_process(t_data *data, int i)
 		free_data(data);
 		exit(1);
 	}
+	if (i < data->command.cmd_count - 1)
+		close(data->pipe_fd[2 * i + 1]);
+	if (i > 0 && i < data->command.cmd_count)
+		close(data->pipe_fd[2 * i - 2]);
 	if (WEXITSTATUS(status) != 0 && i == data->command.cmd_count - 1)
 	{
 		exit_code = WEXITSTATUS(status);
-		cleanup_and_exit(data, i, exit_code);
+		free_data(data);
+		exit(exit_code);
 	}
 }
 
