@@ -63,6 +63,8 @@ int	check_command(t_data *data, char *command)
 	error = 0;
 	if (ft_strchr(command, '/') == NULL)
 		error = find_path(data, cmd);
+	else if (access(command, F_OK))
+		return (err_handl(cmd, ": command not found", 127));
 	else
 		data->command.cmd_path = command;
 	if (error)
