@@ -86,6 +86,7 @@ static void	parent_process(t_data *data, int i)
 	{
 		exit_code = WEXITSTATUS(status);
 		free_data(data);
+		close(data->pipe_fd[2 * i - 2]);
 		exit(exit_code);
 	}
 	if (i < data->command.cmd_count - 1)
