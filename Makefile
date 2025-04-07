@@ -16,8 +16,11 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
+NAME_BONUS = pipex_bonus
 SRCS = check.c set_path.c utils.c pipex.c
+BONUS_SRCS = check.c set_path.c utils.c pipex_bonus.c
 OBJS = $(SRCS:.c=.o)
+BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
 LIBFT_FOLDER = ./Libft
 LIBFT_ARCHIVE = libft.a
@@ -35,12 +38,17 @@ $(NAME): $(LIBFT) $(OBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+bonus: $(NAME_BONUS)
+
+$(NAME_BONUS): $(LIBFT) $(BONUS_OBJS)
+	$(CC) $(CFLAGS) -g $(BONUS_OBJS) -o $(NAME_BONUS) -L$(LIBFT_FOLDER) -l$(LIBFT_LIB)
+
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(BONUS_OBJS)
 	make fclean -C $(LIBFT_FOLDER)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(NAME_BONUS)
 
 re: fclean all
 

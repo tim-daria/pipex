@@ -104,7 +104,7 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
 
-	if (argc != 5)
+	if (argc < 5)
 	{
 		ft_printf("Wrong number of arguments\n");
 		return (0);
