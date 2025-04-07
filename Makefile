@@ -17,8 +17,8 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
 NAME_BONUS = pipex_bonus
-SRCS = check.c set_path.c utils.c pipex.c
-BONUS_SRCS = check.c set_path.c utils.c pipex_bonus.c
+SRCS = check.c set_path.c utils.c child_and_parent.c pipex.c
+BONUS_SRCS = check.c set_path.c utils.c child_and_parent.c pipex_bonus.c
 OBJS = $(SRCS:.c=.o)
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 

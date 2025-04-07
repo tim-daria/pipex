@@ -12,18 +12,21 @@
 
 #include "pipex.h"
 
-void	free_data(t_data *data)
+void	create_pipe(t_data *data, int i)
 {
-	if (data->pipe_fd)
-		free(data->pipe_fd);
-	if (data->child_pid)
-		free(data->child_pid);
-	if (data->command.cmd_path)
-		free(data->command.cmd_path);
-	if (data->command.cmd_argv)
-		free_array(data->command.cmd_argv);
-	if (data->path_file)
-		free_array(data->path_file);
+	if (pipe(&data->pipe_fd[2 * i]) == -1)
+	{
+		perror("Pipe failed");
+		free_data(data);
+		exit(1);
+	}
+}
+
+void	cleanup_and_exit(t_data *data, int i, int err)
+{
+	close_fds(data, i);
+	free_data(data);
+	exit(err);
 }
 
 void	close_fds(t_data *data, int i)
@@ -51,14 +54,18 @@ void	close_fds(t_data *data, int i)
 	}
 }
 
-void	create_pipe(t_data *data, int i)
+void	free_data(t_data *data)
 {
-	if (pipe(&data->pipe_fd[2 * i]) == -1)
-	{
-		perror("Pipe failed");
-		free_data(data);
-		exit(1);
-	}
+	if (data->pipe_fd)
+		free(data->pipe_fd);
+	if (data->child_pid)
+		free(data->child_pid);
+	if (data->command.cmd_path)
+		free(data->command.cmd_path);
+	if (data->command.cmd_argv)
+		free_array(data->command.cmd_argv);
+	if (data->path_file)
+		free_array(data->path_file);
 }
 
 void	free_array(char **str_array)
@@ -69,28 +76,4 @@ void	free_array(char **str_array)
 	while (str_array[i])
 		free (str_array[i++]);
 	free (str_array);
-}
-
-void	init_data(t_data *data, int argc)
-{
-	data->command.cmd_count = argc - 3;
-	data->command.cmd_argv = NULL;
-	data->command.cmd_path = NULL;
-	data->fd_in = -1;
-	data->fd_out = -1;
-	data->path_file = NULL;
-	data->child_pid = malloc(data->command.cmd_count * sizeof(pid_t));
-	if (data->child_pid == NULL)
-	{
-		ft_putendl_fd("Malloc failed", 2);
-		exit(1);
-	}
-	data->pipe_fd = malloc((data->command.cmd_count - 1) * 2 * sizeof(int));
-	if (data->pipe_fd == NULL)
-	{
-		ft_putendl_fd("Malloc failed", 2);
-		if (data->child_pid)
-			free(data->child_pid);
-		exit(1);
-	}
 }

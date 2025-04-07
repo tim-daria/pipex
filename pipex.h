@@ -42,7 +42,7 @@ typedef struct s_data
 int		set_path(t_data *data, char *envp[]);
 int		check_command(t_data *data, char *command);
 int		open_file(t_data *data, char *file, int i);
-void	init_data(t_data *data, int argc);
+void	interprocess_communication(t_data *data, char *argv[], char *envp[]);
 void	close_fds(t_data *data, int i);
 void	create_pipe(t_data *data, int i);
 void	free_array(char **str_array);
