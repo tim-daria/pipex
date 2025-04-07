@@ -12,12 +12,21 @@
 
 #include "pipex.h"
 
+static int	err_handl(char *fname, char *msg, int error, void *p)
+{
+	ft_putstr_fd(fname, 2);
+	ft_putendl_fd(msg, 2);
+	if (p)
+		free(p);
+	return (error);
+}
+
 static char	*extract_command(t_data *data, char *command)
 {
 	data->command.cmd_argv = ft_split(command, ' ');
 	if (data->command.cmd_argv == NULL)
 	{
-		ft_printf("Command not found\n");
+		ft_putendl_fd("Malloc failed", 2);
 		return (NULL);
 	}
 	return (data->command.cmd_argv[0]);
@@ -33,12 +42,9 @@ static int	find_path(t_data *data, char *cmd)
 	{
 		temp = ft_strjoin(data->path_file[i], cmd);
 		if (temp == NULL)
-		{
-			ft_printf("%s: command not found\n", cmd);
-			free_array(data->command.cmd_argv);
-			return (-1);
-		}
-		if (access(temp, X_OK) == 0)
+			return (err_handl(cmd, ": command not found", 127,
+					data->command.cmd_argv));
+		if (access(temp, F_OK) == 0)
 		{
 			data->command.cmd_path = temp;
 			return (0);
@@ -46,18 +52,27 @@ static int	find_path(t_data *data, char *cmd)
 		free(temp);
 		i++;
 	}
-	ft_printf("%s: command not found\n", cmd);
-	free_array(data->command.cmd_argv);
-	return (-1);
+	return (err_handl(cmd, ": command not found", 127,
+			data->command.cmd_argv));
 }
 
 int	check_command(t_data *data, char *command)
 {
 	char	*cmd;
+	int		error;
 
 	cmd = extract_command(data, command);
-	if (cmd == NULL || find_path(data, cmd) == -1)
+	if (cmd == NULL)
 		return (-1);
+	error = 0;
+	if (ft_strchr(command, '/') == NULL)
+		error = find_path(data, cmd);
+	else
+		data->command.cmd_path = command;
+	if (error)
+		return (error);
+	if (access(data->command.cmd_path, X_OK) != 0)
+		err_handl(cmd, ": is not executable", 126, NULL);
 	return (0);
 }
 

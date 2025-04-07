@@ -80,13 +80,13 @@ void	init_data(t_data *data, int argc)
 	data->child_pid = malloc(data->command.cmd_count * sizeof(pid_t));
 	if (data->child_pid == NULL)
 	{
-		ft_printf("Malloc failed\n");
+		ft_putendl_fd("Malloc failed", 2);
 		exit(1);
 	}
 	data->pipe_fd = malloc((data->command.cmd_count - 1) * 2 * sizeof(int));
 	if (data->pipe_fd == NULL)
 	{
-		ft_printf("Malloc failed\n");
+		ft_putendl_fd("Malloc failed", 2);
 		if (data->child_pid)
 			free(data->child_pid);
 		exit(1);

@@ -25,7 +25,7 @@ static int	extract_path(char *envp[])
 	}
 	if (envp[i] == NULL)
 	{
-		ft_printf("Command not found\n");
+		ft_putendl_fd("Failed to find the path", 2);
 		return (-1);
 	}
 	return (i);
@@ -68,14 +68,14 @@ int	set_path(t_data *data, char *envp[])
 	path = ft_strtrim(envp[i], "PATH=");
 	if (path == NULL || ft_strlen(path) == 0)
 	{
-		ft_printf("Command not found\n");
+		ft_putendl_fd("Failed to find the path", 2);
 		return (-1);
 	}
 	path_file = ft_split(path, ':');
 	free(path);
 	if (path_file == NULL || add_slash_topath(data, path_file) == -1)
 	{
-		ft_printf("Command not found\n");
+		ft_putendl_fd("Failed to find the path", 2);
 		return (-1);
 	}
 	return (0);

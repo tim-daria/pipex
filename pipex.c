@@ -12,43 +12,50 @@
 
 #include "pipex.h"
 
-static void	first_and_last_child(t_data *data, int i, char *argv[])
+static void	first_child(t_data *data, int i, char *argv[])
 {
-	if (i == 0)
+	if (open_file(data, argv[1], i) == -1
+		|| check_command(data, argv[i + 2]) != 0)
 	{
-		if (open_file(data, argv[1], i) == -1
-			|| check_command(data, argv[i + 2]) == -1)
-		{
-			close_fds(data, i);
-			exit(1);
-		}
-		dup2(data->fd_in, STDIN_FILENO);
-		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
 		close_fds(data, i);
+		exit(1);
 	}
-	else if (i == data->command.cmd_count - 1)
+	dup2(data->fd_in, STDIN_FILENO);
+	dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
+	close_fds(data, i);
+}
+
+static void	last_child(t_data *data, int i, char *argv[])
+{
+	int	error;
+
+	if (open_file(data, argv[data->command.cmd_count + 2], i) == -1)
 	{
-		if (open_file(data, argv[data->command.cmd_count + 2], i) == -1
-			|| check_command(data, argv[i + 2]) == -1)
-		{
-			close_fds(data, i);
-			exit(1);
-		}
-		dup2(data->fd_out, STDOUT_FILENO);
-		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 		close_fds(data, i);
+		exit(1);
 	}
+	error = check_command(data, argv[i + 2]);
+	if (error != 0)
+	{
+		close_fds(data, i);
+		exit(error);
+	}
+	dup2(data->fd_out, STDOUT_FILENO);
+	dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
+	close_fds(data, i);
 }
 
 static void	child_process(t_data *data, int i, char *argv[], char *envp[])
 {
 	int	signal;
 
-	if (i == 0 || i == data->command.cmd_count - 1)
-		first_and_last_child(data, i, argv);
+	if (i == 0)
+		first_child(data, i, argv);
+	else if (i == data->command.cmd_count - 1)
+		last_child(data, i, argv);
 	else
 	{
-		if (check_command(data, argv[i + 2]) == -1)
+		if (check_command(data, argv[i + 2]) != 0)
 		{
 			close_fds(data, i);
 			exit(1);
@@ -69,7 +76,23 @@ static void	child_process(t_data *data, int i, char *argv[], char *envp[])
 
 static void	parent_process(t_data *data, int i)
 {
-	waitpid(data->child_pid[i], NULL, 0);
+	int	status;
+	int	w;
+	int	exit_code;
+
+	w = waitpid(data->child_pid[i], &status, 0);
+	if (w == -1)
+	{
+		perror("waitpid");
+		free_data(data);
+		exit(1);
+	}
+	if (WEXITSTATUS(status) != 0 && i == data->command.cmd_count - 1)
+	{
+		exit_code = WEXITSTATUS(status);
+		free_data(data);
+		exit(exit_code);
+	}
 	if (i < data->command.cmd_count - 1)
 		close(data->pipe_fd[2 * i + 1]);
 	if (i > 0 && i < data->command.cmd_count)
@@ -106,7 +129,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	if (argc != 5)
 	{
-		ft_printf("Wrong number of arguments\n");
+		ft_putendl_fd("Wrong number of arguments", 2);
 		return (0);
 	}
 	init_data(&data, argc);
