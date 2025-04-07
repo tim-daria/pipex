@@ -47,5 +47,6 @@ void	close_fds(t_data *data, int i);
 void	create_pipe(t_data *data, int i);
 void	free_array(char **str_array);
 void	free_data(t_data *data);
+void	cleanup_and_exit(t_data *data, int i, int err);
 
 #endif

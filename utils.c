@@ -20,7 +20,9 @@ void	free_data(t_data *data)
 		free(data->child_pid);
 	if (data->command.cmd_path)
 		free(data->command.cmd_path);
-	if (data->path_file[0])
+	if (data->command.cmd_argv)
+		free(data->command.cmd_argv);
+	if (data->path_file)
 		free_array(data->path_file);
 }
 

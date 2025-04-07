@@ -12,12 +12,10 @@
 
 #include "pipex.h"
 
-static int	err_handl(char *fname, char *msg, int error, void *p)
+static int	err_handl(char *fname, char *msg, int error)
 {
 	ft_putstr_fd(fname, 2);
 	ft_putendl_fd(msg, 2);
-	if (p)
-		free(p);
 	return (error);
 }
 
@@ -42,8 +40,7 @@ static int	find_path(t_data *data, char *cmd)
 	{
 		temp = ft_strjoin(data->path_file[i], cmd);
 		if (temp == NULL)
-			return (err_handl(cmd, ": command not found", 127,
-					data->command.cmd_argv));
+			return (err_handl(cmd, ": command not found", 127));
 		if (access(temp, F_OK) == 0)
 		{
 			data->command.cmd_path = temp;
@@ -52,8 +49,7 @@ static int	find_path(t_data *data, char *cmd)
 		free(temp);
 		i++;
 	}
-	return (err_handl(cmd, ": command not found", 127,
-			data->command.cmd_argv));
+	return (err_handl(cmd, ": command not found", 127));
 }
 
 int	check_command(t_data *data, char *command)
@@ -72,7 +68,7 @@ int	check_command(t_data *data, char *command)
 	if (error)
 		return (error);
 	if (access(data->command.cmd_path, X_OK) != 0)
-		err_handl(cmd, ": is not executable", 126, NULL);
+		err_handl(cmd, ": is not executable", 126);
 	return (0);
 }
 

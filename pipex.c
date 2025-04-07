@@ -12,6 +12,13 @@
 
 #include "pipex.h"
 
+void	cleanup_and_exit(t_data *data, int i, int err)
+{
+	close_fds(data, i);
+	free_data(data);
+	exit(err);
+}
+
 static void	first_child(t_data *data, int i, char *argv[])
 {
 	if (open_file(data, argv[1], i) == -1
@@ -56,10 +63,7 @@ static void	child_process(t_data *data, int i, char *argv[], char *envp[])
 	else
 	{
 		if (check_command(data, argv[i + 2]) != 0)
-		{
-			close_fds(data, i);
-			exit(1);
-		}
+			cleanup_and_exit(data, i, 1);
 		dup2(data->pipe_fd[2 * i - 2], STDIN_FILENO);
 		dup2(data->pipe_fd[2 * i + 1], STDOUT_FILENO);
 		close_fds(data, i);
