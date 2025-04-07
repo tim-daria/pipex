@@ -68,7 +68,7 @@ int	check_command(t_data *data, char *command)
 	if (error)
 		return (error);
 	if (access(data->command.cmd_path, X_OK) != 0)
-		err_handl(cmd, ": is not executable", 126);
+		return (err_handl(cmd, ": is not executable", 126));
 	return (0);
 }
 
