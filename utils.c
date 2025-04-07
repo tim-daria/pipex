@@ -21,7 +21,7 @@ void	free_data(t_data *data)
 	if (data->command.cmd_path)
 		free(data->command.cmd_path);
 	if (data->command.cmd_argv)
-		free(data->command.cmd_argv);
+		free_array(data->command.cmd_argv);
 	if (data->path_file)
 		free_array(data->path_file);
 }
